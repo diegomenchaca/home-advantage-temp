@@ -1,0 +1,23 @@
+year,champion,runner_up,third,fourth,host,host_actual_place,host_round_reached,host_n_teams,host2,host2_actual_place,host2_round_reached,host_won
+1930,Uruguay,Argentina,United States,Yugoslavia,Uruguay,1,Champion,13,,,,True
+1934,Italy,Czechoslovakia,Germany,Austria,Italy,1,Champion,16,,,,True
+1938,Italy,Hungary,Brazil,Sweden,France,8,Quarterfinal,16,,,,False
+1950,Uruguay,Brazil,Sweden,Spain,Brazil,2,Final,13,,,,False
+1954,Germany,Hungary,Austria,Uruguay,Switzerland,8,Quarterfinal,16,,,,False
+1958,Brazil,Sweden,France,Germany,Sweden,2,Final,16,,,,False
+1962,Brazil,Czechoslovakia,Chile,Yugoslavia,Chile,3,Third Place,16,,,,False
+1966,England,Germany,Portugal,Russia,England,1,Champion,16,,,,True
+1970,Brazil,Italy,Germany,Uruguay,Mexico,8,Quarterfinal,16,,,,False
+1974,Germany,Netherlands,Poland,Brazil,Germany,1,Champion,16,,,,True
+1978,Argentina,Netherlands,Brazil,Italy,Argentina,1,Champion,16,,,,True
+1982,Italy,Germany,Poland,France,Spain,12,Second Round,24,,,,False
+1986,Argentina,Germany,France,Belgium,Mexico,8,Quarterfinal,24,,,,False
+1990,Germany,Argentina,Italy,England,Italy,3,Third Place,24,,,,False
+1994,Brazil,Italy,Sweden,Bulgaria,United States,16,Round of 16,24,,,,False
+1998,France,Brazil,Croatia,Netherlands,France,1,Champion,32,,,,True
+2002,Brazil,Germany,Turkey,South Korea,South Korea,4,Fourth Place,32,Japan,16.0,Round of 16,False
+2006,Italy,France,Germany,Portugal,Germany,3,Third Place,32,,,,False
+2010,Spain,Netherlands,Germany,Uruguay,South Africa,25,Group Stage,32,,,,False
+2014,Germany,Argentina,Netherlands,Brazil,Brazil,4,Fourth Place,32,,,,False
+2018,France,Croatia,Belgium,England,Russia,8,Quarterfinal,32,,,,False
+2022,Argentina,France,Croatia,Morocco,Qatar,25,Group Stage,32,,,,False

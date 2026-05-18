@@ -1,0 +1,24 @@
+year,host,pre_tournament_elo,elo_global_rank,elo_rank_among_participants,n_participants_rated,actual_place,round_reached,n_teams,delta
+1930,Uruguay,1963.0,3,2,13,1,Champion,13,1.0
+1934,Italy,2012.0,2,2,15,1,Champion,16,1.0
+1938,France,1618.0,30,9,13,8,Quarterfinal,16,1.0
+1950,Brazil,1986.0,4,3,13,2,Final,13,1.0
+1954,Switzerland,1669.0,27,14,16,8,Quarterfinal,16,6.0
+1958,Sweden,1797.0,17,11,15,2,Final,16,9.0
+1962,Chile,1740.0,23,13,15,3,Third Place,16,10.0
+1966,England,1944.0,5,5,15,1,Champion,16,4.0
+1970,Mexico,1666.0,35,13,15,8,Quarterfinal,16,5.0
+1974,Germany,2113.0,2,2,14,1,Champion,16,1.0
+1978,Argentina,1906.0,12,8,16,1,Champion,16,7.0
+1982,Spain,1878.0,15,12,23,12,Second Round,24,0.0
+1986,Mexico,1836.0,18,14,23,8,Quarterfinal,24,6.0
+1990,Italy,1964.0,4,3,21,3,Third Place,24,0.0
+1994,United States,1620.0,53,23,23,16,Round of 16,24,7.0
+1998,France,2013.0,4,4,31,1,Champion,32,3.0
+2002,South Korea,1807.0,23,16,30,4,Fourth Place,32,12.0
+2002,Japan,1860.0,13,10,30,16,Round of 16,32,-6.0
+2006,Germany,1893.0,11,10,30,3,Third Place,32,7.0
+2010,South Africa,1521.0,84,32,32,25,Group Stage,32,7.0
+2014,Brazil,2132.0,1,1,32,4,Fourth Place,32,-3.0
+2018,Russia,1698.0,44,27,32,8,Quarterfinal,32,19.0
+2022,Qatar,1663.0,49,27,32,25,Group Stage,32,2.0
