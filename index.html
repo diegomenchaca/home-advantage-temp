@@ -196,6 +196,28 @@
     </div>
   </section>
 
+  <!-- TA WRITEUP -->
+  <section id="ta-writeup">
+    <div class="ta-inner">
+      <p class="ta-label">Prototype Write-up</p>
+      <h3>Design &amp; Process Notes</h3>
+      <p>A dataset of 47,000+ international football matches going back to 1872 gave us the
+      foundation to compare win rates across neutral venues, home venues, and World Cup hosts.
+      Additionally, Elo ratings for every host nation before their tournament let us measure
+      how much they actually over- or underperformed. For the visuals, we made a stacked bar
+      chart showing win/draw/loss splits across the three venue types and also a slope chart
+      showing each host's Elo rank vs. where they ended up finishing. We also annotated the
+      big outliers like South Korea 2002 and South Africa 2010.</p>
+      <p>The most challenging part will be the slope chart labels, since with 23 data points
+      on both sides the text inevitably starts colliding and there's no clean algorithmic fix
+      for it. Additionally, deciding which lines to highlight vs. fade requires thinking
+      carefully about what story we want the reader to follow first. Getting the color encoding
+      to work intuitively across overperformers, underperformers, and neutral cases also took
+      a lot of iteration. On top of that, making the hover interactions feel responsive without
+      the tooltips covering adjacent lines or labels was difficult to get right.</p>
+    </div>
+  </section>
+
   <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
   <script src="https://unpkg.com/scrollama"></script>
   <script type="module" src="js/main.js"></script>

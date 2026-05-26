@@ -235,6 +235,40 @@ h2 {
   padding-top: 1rem;
 }
 
+/* ── TA WRITEUP ──────────────────────────────────────── */
+#ta-writeup {
+  background: var(--color-surface);
+  border-top: 2px dashed var(--color-border);
+  padding: 3rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.ta-inner {
+  width: 100%;
+  max-width: 680px;
+}
+
+.ta-label {
+  font-size: var(--text-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  margin: 0 0 1rem;
+  max-width: none;
+}
+
+#ta-writeup h3 {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  margin: 0 0 1rem;
+}
+
+#ta-writeup p {
+  color: var(--color-text);
+  margin: 0 0 0.9rem;
+}
+
 /* ── SVG SHARED STYLES ───────────────────────────────── */
 .axis text {
   font-family: var(--font-sans);
