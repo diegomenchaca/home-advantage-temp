@@ -1,0 +1,5 @@
+[
+  { "context": "Neutral venue",  "win": 0.443, "draw": 0.224, "loss": 0.334 },
+  { "context": "Home venue",     "win": 0.507, "draw": 0.229, "loss": 0.264 },
+  { "context": "World Cup host", "win": 0.612, "draw": 0.182, "loss": 0.207 }
+]
