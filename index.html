@@ -16,6 +16,8 @@
       <h1>Home Advantage</h1>
       <p class="subhead">Investigating the 12th Man Effect in the World Cup</p>
 
+      <a href="https://youtu.be/placeholder" target="_blank" class="demo-btn">&#9654; Watch Demo Video</a>
+
       <p>Every four years, one country hosts the FIFA World Cup.
         Thirty-two nations play across five weeks. About 1.5 billion
         people watched the 2022 final. It is the biggest single sporting
@@ -69,8 +71,8 @@
         <span class="stat-sub">host win rate, vs. 44.3% at neutral venues</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num">20&thinsp;/&thinsp;23</span>
-        <span class="stat-sub">hosts exceeded their Elo-expected finish</span>
+        <span class="stat-num">21&thinsp;/&thinsp;23</span>
+        <span class="stat-sub">hosts met or exceeded their Elo-expected finish</span>
       </div>
       <div class="stat-card">
         <span class="stat-num">+4.35</span>
@@ -79,7 +81,59 @@
     </div>
   </section>
 
-  <!-- BEATS 1–6: SCROLL STORY -->
+  <!-- HOST CARD CAROUSEL -->
+  <section id="host-cards-section">
+    <div class="host-cards-grid">
+      <div class="host-cards-left">
+        <div class="card-flipper">
+          <div class="host-card" id="host-card">
+            <div class="card-header">
+              <div class="hd-text">
+                <span class="card-country" id="card-country"></span>
+                <span class="card-year" id="card-year"></span>
+              </div>
+              <span class="card-flag" id="card-flag"></span>
+            </div>
+            <div class="card-body">
+              <div class="card-stats">
+                <div class="card-stat-cell">
+                  <div class="card-stat-label">ELO RANK</div>
+                  <div class="card-stat-value" id="card-elo"></div>
+                </div>
+                <div class="card-stat-cell">
+                  <div class="card-stat-label">FINISHED</div>
+                  <div class="card-stat-value" id="card-finish"></div>
+                </div>
+                <div class="card-stat-cell">
+                  <div class="card-stat-label">DELTA</div>
+                  <div class="card-stat-value card-delta-value" id="card-delta"></div>
+                </div>
+                <div class="card-stat-cell">
+                  <div class="card-stat-label">TOURNAMENT</div>
+                  <div class="card-stat-value" id="card-tournament"></div>
+                </div>
+              </div>
+              <hr class="card-divider" />
+              <div class="card-results" id="card-results"></div>
+              <p class="card-note" id="card-note"></p>
+            </div>
+            <button class="card-flip-btn" id="card-flip-btn" aria-label="Next card">&#8594;</button>
+          </div>
+        </div>
+        <div class="card-dots" id="card-dots"></div>
+      </div>
+      <div class="host-cards-right">
+        <p class="host-cards-heading">Six host nations.</p>
+        <p class="host-cards-body">All six went further than anyone predicted.
+          Each one is a data point in the same argument — that
+          hosting the World Cup does something to a team that
+          their talent alone cannot explain.</p>
+        <p class="host-cards-body">Click the card to flip through them.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEATS 1–5: SCROLL STORY -->
   <div id="scroll-container">
     <div id="narrative">
 
@@ -124,28 +178,41 @@
         </p>
       </div>
 
-      <div class="scroll-step" data-step="5">
-        <p>Every World Cup host since 1930. The left axis is their Elo
-          ranking before the tournament. The right axis is where they
-          finished. When a line rises, the host outperformed.</p>
-
-        <p>Almost all of them rise.</p>
+      <div class="scroll-step" data-step="5.1">
+        <p>Here's every World Cup host nation since 1930, plotted against
+          where their Elo rating predicted they'd finish. The hollow circle
+          is the prediction. The filled circle is where they actually ended.
+          The line between them is the hosting premium.</p>
       </div>
 
-      <div class="scroll-step" data-step="6">
-        <p>South Korea in 2002 is the most extreme case. Ranked
-          16th before the tournament, they finished 4th. A gain of
-          12 positions. But South Africa in 2010 became the first
-          host ever eliminated in the group stage.
-        </p>
+      <div class="scroll-step" data-step="5.2">
+        <p>Four hosts gained nine or more finishing positions above their Elo
+          prediction. Russia in 2018 (ranked 27th, reached the quarterfinal, +19).
+          South Korea in 2002 (ranked 16th, finished 4th, +12). Chile in 1962
+          (ranked 13th, finished 3rd, +10). Sweden in 1958 (ranked 11th, reached
+          the final, +9).</p>
+      </div>
 
-        <p>Explore all 23 tournaments. Hover over any dot for details.</p>
+      <div class="scroll-step" data-step="5.3">
+        <p>But the effect isn't universal. Brazil in 2014 was predicted to win but
+          only finished 4th. Japan in 2002 ranked 10th as co-host but exited in
+          the Round of 16. Spain in 1982 and Italy in 1990 both met their Elo
+          prediction exactly - no gain, no loss.</p>
+      </div>
+
+      <div class="scroll-step" data-step="5.4">
+        <p>21 of 23 host nations met or exceeded where their Elo predicted. 
+          The average gap is 4.35 finishing positions; roughly the difference
+          between a quarter-final exit and winning the whole thing.</p>
       </div>
 
     </div><!-- #narrative -->
 
     <div id="viz-panel">
-      <svg id="main-svg" width="100%" height="100%" viewBox="0 0 700 500" preserveAspectRatio="xMidYMid meet"></svg>
+      <div id="viz-wrap">
+        <svg id="main-svg" width="100%" height="auto" viewBox="0 0 700 500" preserveAspectRatio="xMidYMid meet"></svg>
+        <div id="callout-strip"></div>
+      </div>
       <div id="controls"></div>
       <div id="tooltip"></div>
     </div>
@@ -156,27 +223,27 @@
     <div class="prose-col">
       <h2>So does hosting actually help?</h2>
 
-      <p>Twenty of 23 host nations finished above what their Elo
+      <p>Twenty-one of twenty-three host nations met or exceeded what their Elo
         rating predicted. The average gain is 4.35 finishing positions.
         Roughly the difference between a quarterfinal exit and winning
         the whole thing.
       </p>
 
       <p>The raw win-rate gap (61% vs. 44%) could reflect stronger teams
-        hosting more often. But the Elo-adjusted numbers hold after you
-        control for talent. The effect is real.
+        hosting more often. But the Elo-adjusted numbers still hold even 
+        after you control for talent.
       </p>
 
       <p>Why? Crowd pressure on referees is documented across sports.
         No travel across a six-match, four-week tournament is a genuine
         physical advantage. And there's something harder to measure about
-        playing for your country in your country. be it pride, or pressure,
+        playing for your country in your country. Be it pride, pressure,
         or whatever, it shows up in the results.
       </p>
 
-      <p>Qatar's 2022 group-stage exit is the one clear exception. But
-        if you're a nation deciding whether the football advantage is worth
-        the billions it costs to host, data says yes.
+      <p>Japan in 2002 and Brazil in 2014 are the two clear exceptions.
+        But if you're a nation deciding whether the football advantage is worth
+        the billions it costs to host, the data says yes.
       </p>
 
       <div class="stat-cards conclusion-cards">
@@ -185,8 +252,8 @@
           <span class="stat-sub">host win rate, vs. 44.3% at neutral venues</span>
         </div>
         <div class="stat-card">
-          <span class="stat-num">20&thinsp;/&thinsp;23</span>
-          <span class="stat-sub">hosts who finished above their Elo expectation</span>
+          <span class="stat-num">21&thinsp;/&thinsp;23</span>
+          <span class="stat-sub">hosts who met or exceeded their Elo expectation</span>
         </div>
         <div class="stat-card">
           <span class="stat-num">+4.35</span>
@@ -196,30 +263,11 @@
     </div>
   </section>
 
-  <!-- TA WRITEUP -->
-  <section id="ta-writeup">
-    <div class="ta-inner">
-      <p class="ta-label">Prototype Write-up</p>
-      <h3>Design &amp; Process Notes</h3>
-      <p>A dataset of 47,000+ international football matches going back to 1872 gave us the
-      foundation to compare win rates across neutral venues, home venues, and World Cup hosts.
-      Additionally, Elo ratings for every host nation before their tournament let us measure
-      how much they actually over- or underperformed. For the visuals, we made a stacked bar
-      chart showing win/draw/loss splits across the three venue types and also a slope chart
-      showing each host's Elo rank vs. where they ended up finishing. We also annotated the
-      big outliers like South Korea 2002 and South Africa 2010.</p>
-      <p>The most challenging part will be the slope chart labels, since with 23 data points
-      on both sides the text inevitably starts colliding and there's no clean algorithmic fix
-      for it. Additionally, deciding which lines to highlight vs. fade requires thinking
-      carefully about what story we want the reader to follow first. Getting the color encoding
-      to work intuitively across overperformers, underperformers, and neutral cases also took
-      a lot of iteration. On top of that, making the hover interactions feel responsive without
-      the tooltips covering adjacent lines or labels was difficult to get right.</p>
-    </div>
-  </section>
+  <div style="height:10vh"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
   <script src="https://unpkg.com/scrollama"></script>
+  <script type="module" src="js/host_cards.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

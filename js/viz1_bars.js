@@ -1,194 +1,270 @@
-export function initBars(svg, data) {
-  const VW = 700, VH = 500;
-  const margin = { top: 60, right: 160, bottom: 50, left: 160 };
-  const W = VW - margin.left - margin.right;
-  const H = VH - margin.top - margin.bottom;
+export function initBars(svg, _data) {
+  const VW = 620, VH = 230;
+  svg.attr('viewBox', `0 0 ${VW} ${VH}`);
 
-  const g = svg.append('g')
-    .attr('class', 'viz1-group')
-    .attr('transform', `translate(${margin.left},${margin.top})`);
+  const g = svg.append('g').attr('class', 'viz1-group');
 
-  const rows = [
-    { key: 'neutral', label: 'Neutral venue',  ...data[0] },
-    { key: 'home',    label: 'Home venue',      ...data[1] },
-    { key: 'host',    label: 'World Cup host',  ...data[2] },
+  // ── DATA ────────────────────────────────────────────────
+  const ROWS = [
+    { key: 'neutral', label: 'Neutral venue',  rowY: 60,  winRate: '44.3%',
+      winW: 168.3, drawW:  85.1, lossW: 126.6, dotX: 302.3,
+      tip: 'Win 44.3%  ·  Draw 22.4%  ·  Loss 33.3%' },
+    { key: 'home',    label: 'Home venue',      rowY: 115, winRate: '50.7%',
+      winW: 192.7, drawW:  87.0, lossW: 100.3, dotX: 326.7,
+      tip: 'Win 50.7%  ·  Draw 22.9%  ·  Loss 26.4%' },
+    { key: 'host',    label: 'World Cup host',  rowY: 170, winRate: '61.2%',
+      winW: 232.6, drawW:  69.2, lossW:  78.2, dotX: 366.6,
+      tip: 'Win 61.2%  ·  Draw 18.2%  ·  Loss 20.6%' },
   ];
-
-  const y = d3.scaleBand()
-    .domain(rows.map(r => r.key))
-    .range([0, H])
-    .padding(0.38);
-
-  const x = d3.scaleLinear().domain([0, 1]).range([0, W]);
-
-  const colorWin  = getComputedStyle(document.documentElement).getPropertyValue('--color-win').trim()  || '#2d6a4f';
-  const colorDraw = getComputedStyle(document.documentElement).getPropertyValue('--color-neutral').trim() || '#8d8d8d';
-  const colorLoss = getComputedStyle(document.documentElement).getPropertyValue('--color-loss').trim() || '#c1440e';
-
-  function barOpacity(rowKey, step) {
-    if (step === '1') return rowKey === 'neutral' ? 1 : 0;
-    if (step === '2') return rowKey === 'host' ? 0 : 1;
-    if (step === '3' || step === '4') return 1;
-    return 1;
-  }
-
-  function groupOpacity(step) {
-    return step === '4' ? 0.2 : 1;
-  }
+  const TRACK_X = 134;
 
   // ── ROW GROUPS ──────────────────────────────────────────
-  const rowGroups = g.selectAll('.bar-row')
-    .data(rows)
+  const rowGs = g.selectAll('.row-g')
+    .data(ROWS)
     .join('g')
-    .attr('class', 'bar-row')
-    .attr('transform', d => `translate(0,${y(d.key)})`)
+    .attr('class', 'row-g')
     .attr('opacity', 0);
 
-  // stacked segments: win | draw | loss
-  function buildSegments(grp) {
-    const seg = [
-      { field: 'win',  color: colorWin },
-      { field: 'draw', color: colorDraw },
-      { field: 'loss', color: colorLoss },
-    ];
-    seg.forEach(({ field, color }) => {
-      grp.append('rect')
-        .attr('class', `seg-${field}`)
-        .attr('x', function(d) {
-          const prev = field === 'win' ? 0 : field === 'draw' ? d.win : d.win + d.draw;
-          return x(prev);
-        })
-        .attr('y', 0)
-        .attr('height', y.bandwidth())
-        .attr('width', 0)
-        .attr('fill', color);
-    });
-  }
-  buildSegments(rowGroups);
-
-  // row labels (left)
-  rowGroups.append('text')
-    .attr('x', -8)
-    .attr('y', y.bandwidth() / 2)
-    .attr('dy', '0.35em')
+  // Labels
+  rowGs.append('text')
+    .attr('x', 126).attr('y', d => d.rowY + 4)
     .attr('text-anchor', 'end')
-    .attr('font-family', 'var(--font-sans)')
-    .attr('font-size', '0.78rem')
+    .attr('font-family', "var(--font-serif), 'Playfair Display', serif")
+    .attr('font-size', '13.5px').attr('font-weight', 700)
     .attr('fill', 'var(--color-text)')
     .text(d => d.label);
 
-  // win-rate labels (right)
-  rowGroups.append('text')
-    .attr('class', 'win-label')
-    .attr('x', d => x(d.win) + 6)
-    .attr('y', y.bandwidth() / 2)
-    .attr('dy', '0.35em')
-    .attr('font-family', 'var(--font-sans)')
-    .attr('font-size', '0.78rem')
-    .attr('fill', colorWin)
-    .attr('font-weight', 500)
-    .attr('opacity', 0)
-    .text(d => `${(d.win * 100).toFixed(1)}% wins`);
+  // Track — win segment
+  rowGs.append('rect')
+    .attr('x', TRACK_X).attr('y', d => d.rowY - 6)
+    .attr('width', d => d.winW).attr('height', 12)
+    .attr('fill', 'var(--color-win)').attr('opacity', 0.75);
 
-  // ── LEGEND ──────────────────────────────────────────────
-  const legendData = [
-    { label: 'Win',  color: colorWin },
-    { label: 'Draw', color: colorDraw },
-    { label: 'Loss', color: colorLoss },
+  // Track — draw segment
+  rowGs.append('rect')
+    .attr('x', d => TRACK_X + d.winW).attr('y', d => d.rowY - 6)
+    .attr('width', d => d.drawW).attr('height', 12)
+    .attr('fill', 'var(--color-neutral)').attr('opacity', 0.65);
+
+  // Track — loss segment
+  rowGs.append('rect')
+    .attr('x', d => TRACK_X + d.winW + d.drawW).attr('y', d => d.rowY - 6)
+    .attr('width', d => d.lossW).attr('height', 12)
+    .attr('fill', 'var(--color-loss)').attr('opacity', 0.75);
+
+  // Win-rate dot — outer fill
+  rowGs.append('circle')
+    .attr('cx', d => d.dotX).attr('cy', d => d.rowY)
+    .attr('r', 8).attr('fill', 'var(--color-win)');
+
+  // Win-rate dot — hollow centre
+  rowGs.append('circle')
+    .attr('cx', d => d.dotX).attr('cy', d => d.rowY)
+    .attr('r', 4.5).attr('fill', 'var(--color-bg)');
+
+  // Win-rate labels (right of tracks)
+  rowGs.append('text')
+    .attr('x', 522).attr('y', d => d.rowY + 5)
+    .attr('text-anchor', 'start')
+    .attr('font-family', "var(--font-serif), 'Playfair Display', serif")
+    .attr('font-size', '14px').attr('font-weight', 700)
+    .attr('fill', 'var(--color-win)')
+    .text(d => d.winRate);
+
+  // ── CONNECTOR LINES ──────────────────────────────────────
+  const L1 = { x1: 302.3, y1:  60, x2: 326.7, y2: 115 };
+  const L2 = { x1: 326.7, y1: 115, x2: 366.6, y2: 170 };
+  L1.len = Math.hypot(L1.x2 - L1.x1, L1.y2 - L1.y1);
+  L2.len = Math.hypot(L2.x2 - L2.x1, L2.y2 - L2.y1);
+
+  const line1 = g.append('line')
+    .attr('x1', L1.x1).attr('y1', L1.y1).attr('x2', L1.x2).attr('y2', L1.y2)
+    .attr('stroke', '#d0c9bb').attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', L1.len).attr('stroke-dashoffset', L1.len)
+    .attr('opacity', 0);
+
+  const line2 = g.append('line')
+    .attr('x1', L2.x1).attr('y1', L2.y1).attr('x2', L2.x2).attr('y2', L2.y2)
+    .attr('stroke', 'var(--color-accent)').attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', L2.len).attr('stroke-dashoffset', L2.len)
+    .attr('opacity', 0);
+
+  // ── DELTA LABELS ─────────────────────────────────────────
+  const delta1 = g.append('text')
+    .attr('x', 332).attr('y', 92)
+    .attr('font-family', 'var(--font-sans)').attr('font-size', '10.5px')
+    .attr('fill', 'var(--color-muted)')
+    .attr('opacity', 0).text('+6.4');
+
+  const delta2 = g.append('text')
+    .attr('x', 356).attr('y', 147)
+    .attr('font-family', 'var(--font-sans)').attr('font-size', '10.5px')
+    .attr('font-weight', 500).attr('fill', 'var(--color-accent)')
+    .attr('opacity', 0).text('+16.9');
+
+  // ── LEGEND ───────────────────────────────────────────────
+  const LEG = [
+    { label: 'Win',  color: 'var(--color-win)',     lx: 221 },
+    { label: 'Draw', color: 'var(--color-neutral)',  lx: 284 },
+    { label: 'Loss', color: 'var(--color-loss)',     lx: 354 },
   ];
-  const legend = g.append('g').attr('transform', `translate(0,${H + 28})`);
-  legendData.forEach((d, i) => {
-    const lx = i * 90;
-    legend.append('rect').attr('x', lx).attr('y', 0).attr('width', 12).attr('height', 12).attr('fill', d.color);
-    legend.append('text').attr('x', lx + 16).attr('y', 9)
-      .attr('font-family', 'var(--font-sans)').attr('font-size', '0.72rem').attr('fill', 'var(--color-muted)')
-      .text(d.label);
+  const legG = g.append('g').attr('transform', 'translate(0, 208)');
+  LEG.forEach(({ label, color, lx }) => {
+    legG.append('rect')
+      .attr('x', lx).attr('y', 0)
+      .attr('width', 14).attr('height', 8)
+      .attr('fill', color);
+    legG.append('text')
+      .attr('x', lx + 18).attr('y', 7)
+      .attr('font-family', 'var(--font-sans)').attr('font-size', '10px')
+      .attr('fill', 'var(--color-muted)')
+      .text(label);
   });
 
-  // ── ANNOTATION LAYER ────────────────────────────────────
-  const ann = g.append('g').attr('class', 'annotations').attr('opacity', 0);
+  // ── ROW HOVER + TOOLTIP ─────────────────────────────────
+  let hoverEnabled = false;
 
-  // +6.4pp annotation (step 2)
-  const homeRow = rows.find(r => r.key === 'home');
-  const neutralRow = rows.find(r => r.key === 'neutral');
-  const ann2 = ann.append('g').attr('class', 'ann-step2');
-  const nyc = y('neutral') + y.bandwidth() / 2;
-  const hyc = y('home') + y.bandwidth() / 2;
-  ann2.append('line')
-    .attr('x1', x(neutralRow.win)).attr('y1', nyc)
-    .attr('x2', x(homeRow.win)).attr('y2', hyc)
-    .attr('stroke', 'var(--color-muted)').attr('stroke-width', 1)
-    .attr('stroke-dasharray', '3,3');
-  ann2.append('text')
-    .attr('x', x(homeRow.win) + 10).attr('y', (nyc + hyc) / 2)
-    .attr('dy', '0.35em').attr('font-family', 'var(--font-sans)')
-    .attr('font-size', '0.72rem').attr('fill', 'var(--color-muted)')
-    .text('+6.4pp over neutral');
-
-  // +16.9pp gold annotation (step 3)
-  const hostRow = rows.find(r => r.key === 'host');
-  const ann3 = ann.append('g').attr('class', 'ann-step3').attr('opacity', 0);
-  const nycB = y('neutral') + y.bandwidth() / 2;
-  const hycB = y('host') + y.bandwidth() / 2;
-  ann3.append('line')
-    .attr('x1', x(neutralRow.win) + 4).attr('y1', nycB)
-    .attr('x2', x(hostRow.win) + 4).attr('y2', hycB)
-    .attr('stroke', 'var(--color-accent)').attr('stroke-width', 1.5);
-  ann3.append('text')
-    .attr('x', x(hostRow.win) + 12).attr('y', (nycB + hycB) / 2)
-    .attr('dy', '0.35em').attr('font-family', 'var(--font-sans)')
-    .attr('font-size', '0.78rem').attr('fill', 'var(--color-accent)')
-    .attr('font-weight', 500).text('+16.9pp');
-
-  // ── UPDATE FUNCTION ──────────────────────────────────────
-  let currentStep = null;
-
-  function animateBarsIn(rowKey) {
-    const grp = rowGroups.filter(d => d.key === rowKey);
-    grp.transition().duration(300).attr('opacity', 1);
-    ['win', 'draw', 'loss'].forEach(field => {
-      grp.select(`.seg-${field}`)
-        .transition().duration(600).ease(d3.easeCubicOut)
-        .attr('width', d => {
-          const w = field === 'win' ? d.win : field === 'draw' ? d.draw : d.loss;
-          return x(w);
-        });
-    });
-    grp.select('.win-label').transition().delay(700).duration(200).attr('opacity', 1);
+  let barTip = document.getElementById('bars-tooltip');
+  if (!barTip) {
+    barTip = document.createElement('div');
+    barTip.id = 'bars-tooltip';
+    barTip.style.cssText = [
+      'position:fixed', 'background:#111', 'color:#ccc',
+      'font-family:var(--font-sans)', 'font-size:0.65rem',
+      'letter-spacing:0.06em', 'padding:0.35rem 0.65rem',
+      'pointer-events:none', 'opacity:0', 'transition:opacity 0.1s',
+      'z-index:30', 'white-space:nowrap',
+    ].join(';');
+    document.getElementById('viz-panel').appendChild(barTip);
   }
+
+  // Returns true when a given row key is visible at numeric step sn
+  function isRowVisible(key, sn) {
+    if (key === 'neutral') return sn >= 1;
+    if (key === 'home')    return sn >= 2;
+    if (key === 'host')    return sn >= 3;
+    return false;
+  }
+
+  // Full-width hit-area rects (appended last so they sit on top within each rowG)
+  rowGs.append('rect')
+    .attr('class', 'row-hit')
+    .attr('x', 0)
+    .attr('y', d => d.rowY - 25)
+    .attr('width', VW)
+    .attr('height', 50)
+    .attr('fill', 'transparent')
+    .style('cursor', 'pointer')
+    .on('mouseover', function(event, d) {
+      if (!hoverEnabled) return;
+      const sn = SN[currentStep] || 0;
+      if (!isRowVisible(d.key, sn)) return; // invisible row — ignore
+      rowGs.filter(r => r.key !== d.key && isRowVisible(r.key, sn))
+        .transition('hover').duration(150).ease(d3.easeQuadOut)
+        .attr('opacity', 0.4);
+      barTip.textContent = d.tip;
+      barTip.style.opacity = '1';
+    })
+    .on('mousemove', function(event) {
+      if (!hoverEnabled) return;
+      const nearRight = event.clientX > window.innerWidth * 0.75;
+      barTip.style.left = nearRight
+        ? (event.clientX - barTip.offsetWidth - 12) + 'px'
+        : (event.clientX + 12) + 'px';
+      barTip.style.top = (event.clientY - 30) + 'px';
+    })
+    .on('mouseleave', function() {
+      if (!hoverEnabled) return;
+      const sn = SN[currentStep] || 0;
+      rowGs.filter(r => isRowVisible(r.key, sn))
+        .transition('hover').duration(150).ease(d3.easeQuadOut)
+        .attr('opacity', 1);
+      barTip.style.opacity = '0';
+    });
+
+  // ── HELPERS ──────────────────────────────────────────────
+  const row = key => rowGs.filter(d => d.key === key);
+
+  function drawConnector(line, len) {
+    line.attr('stroke-dashoffset', len).attr('opacity', 1)
+      .transition().duration(400).ease(d3.easeLinear)
+      .attr('stroke-dashoffset', 0);
+  }
+
+  function resetConnector(line, len) {
+    line.interrupt().attr('stroke-dashoffset', len).attr('opacity', 0);
+  }
+
+  // ── UPDATE ────────────────────────────────────────────────
+  let currentStep = null;
+  const SN = { '1': 1, '2': 2, '3': 3, '4': 4 };
 
   return function updateBars(step) {
     if (step === currentStep) return;
     const prev = currentStep;
     currentStep = step;
 
-    const gOpacity = step === '4' ? 0.2 : 1;
-    g.transition().duration(400).attr('opacity', gOpacity);
+    // Hover active for all bar-chart steps (1–4); guards inside handlers
+    // prevent interaction with rows that aren't visible yet
+    hoverEnabled = (SN[step] || 0) >= 1;
+    if (!hoverEnabled) barTip.style.opacity = '0';
 
-    if (step === '1') {
-      if (prev === null) animateBarsIn('neutral');
+    const sn   = SN[step] || 0;
+    const snPr = SN[prev] || 0;
+    const fwd  = sn > snPr;
+
+    g.transition().duration(400).attr('opacity', step === '4' ? 0.2 : 1);
+
+    // Row 1 — neutral (step 1+)
+    if (sn >= 1) {
+      if (fwd && snPr < 1) row('neutral').transition().duration(500).attr('opacity', 1);
+      else                  row('neutral').interrupt().attr('opacity', 1);
+    } else {
+      row('neutral').transition().duration(300).attr('opacity', 0);
     }
-    if (step === '2' && prev !== '3') {
-      animateBarsIn('home');
-      ann.transition().duration(300).attr('opacity', 1);
-      ann.select('.ann-step3').transition().duration(200).attr('opacity', 0);
+
+    // Row 2 — home (step 2+)
+    if (sn >= 2) {
+      if (fwd && snPr < 2) row('home').transition().duration(500).attr('opacity', 1);
+      else                  row('home').interrupt().attr('opacity', 1);
+    } else {
+      row('home').transition().duration(300).attr('opacity', 0);
     }
-    if (step === '3') {
-      animateBarsIn('neutral');
-      animateBarsIn('home');
-      animateBarsIn('host');
-      ann.transition().duration(300).attr('opacity', 1);
-      ann.select('.ann-step3').transition().delay(700).duration(400).attr('opacity', 1);
+
+    // Row 3 — host (step 3+)
+    if (sn >= 3) {
+      if (fwd && snPr < 3) row('host').transition().duration(500).attr('opacity', 1);
+      else                  row('host').interrupt().attr('opacity', 1);
+    } else {
+      row('host').transition().duration(300).attr('opacity', 0);
     }
-    if (step === '4') {
-      ann.transition().duration(300).attr('opacity', 0);
+
+    // Connector 1 + delta1 (step 2+)
+    if (sn >= 2) {
+      if (fwd && snPr < 2) {
+        drawConnector(line1, L1.len);
+        delta1.interrupt().transition().delay(550).duration(200).attr('opacity', 1);
+      } else {
+        line1.interrupt().attr('stroke-dashoffset', 0).attr('opacity', 1);
+        delta1.interrupt().attr('opacity', 1);
+      }
+    } else {
+      resetConnector(line1, L1.len);
+      delta1.interrupt().transition().duration(200).attr('opacity', 0);
     }
-    // going backward
-    if (step === '1' && prev !== null) {
-      rowGroups.filter(d => d.key !== 'neutral').transition().duration(300).attr('opacity', 0);
-      rowGroups.filter(d => d.key !== 'neutral').selectAll('rect').transition().duration(300).attr('width', 0);
-      rowGroups.filter(d => d.key !== 'neutral').select('.win-label').attr('opacity', 0);
-      ann.transition().duration(200).attr('opacity', 0);
+
+    // Connector 2 + delta2 (step 3+)
+    if (sn >= 3) {
+      if (fwd && snPr < 3) {
+        drawConnector(line2, L2.len);
+        delta2.interrupt().transition().delay(550).duration(200).attr('opacity', 1);
+      } else {
+        line2.interrupt().attr('stroke-dashoffset', 0).attr('opacity', 1);
+        delta2.interrupt().attr('opacity', 1);
+      }
+    } else {
+      resetConnector(line2, L2.len);
+      delta2.interrupt().transition().duration(200).attr('opacity', 0);
     }
   };
 }
